@@ -1,31 +1,10 @@
-var my_movies = [
-	{
-		"titulo": "Superlópez",   	
-		"director": "Javier Ruiz Caldera", 	
-		"genero": "Comedia", 	
-		"miniatura": "files/superlopez.png",
-		"trailer": "https://www.youtube.com/embed/qPSySsdbss0"
-	},
-	{
-		"titulo": "Jurassic Park", 	
-		"director": "Steven Spielberg", 		
-		"genero": "Fantasía", 
-		"miniatura": "files/jurassicpark.png",
-		"trailer": "https://www.youtube.com/embed/lc0UehYemQA"
-	},
-	{
-		"titulo": "Interstellar",  	
-		"director": "Christopher Nolan", 		
-		"genero": "Drama", 	
-		"miniatura": "files/interstellar.png",
-		"trailer": "https://www.youtube.com/embed/zSWdZVtXT7E"
-	}
-];
+const URL = "https://api.myjson.com/bins/lsigq";
+var my_movies = [];
 
 var generos = ["Comedia", "Drama", "Fantasía"];
 var visibleGenres = ["Comedia", "Drama"];
 
-let index = () => {
+let index = async () => {
 	/** Render géneros **/
 	let generosHTML = "";
 	let generosDOM = document.getElementById("generos");
@@ -40,7 +19,12 @@ let index = () => {
 	/** Render películas **/
 	let contentDOM = document.getElementById("content");
 	let moviesHTML = "<div id='movies'>";
-
+	try {
+		let res = await fetch(URL);
+		my_movies = await res.json();
+	} catch (e) {
+		alert("No se ha podido recuperar la información.")
+	}
 	for (let p in my_movies) {
 		let movie = my_movies[p];
 		if (visibleGenres.indexOf(movie.genero) !== -1) {
@@ -131,9 +115,24 @@ let extractMovieForm = () => {
 	return movie;
 }
 
-let createmovie = () => {
+let updateAPI = async () => {
+	try {
+		await fetch(URL, {
+			method: 'PUT', 
+			headers:{
+	            "Content-Type": "application/json",
+	        },
+			body: JSON.stringify(my_movies)});
+	} catch(e) {
+		alert("Ha ocurrido un error");
+		return;
+	}
+}
+
+let createmovie = async () => {
 	let movie = extractMovieForm();
 	my_movies.push(movie);
+	await updateAPI();
 	index();
 }
 
@@ -178,15 +177,17 @@ let editMovie = (ind, newMovie) => {
 	`;
 }
 
-let updateMovie = (ind) => {
+let updateMovie = async (ind) => {
 	let movie = extractMovieForm();
 	my_movies[ind] = movie;
+	await updateAPI();
 	index();
 }
 
-let deleteMovie = (ind) => {
+let deleteMovie = async (ind) => {
 	if (confirm("¿Seguro que desea borrar esta película?")) {
 		my_movies.splice(ind, 1);
+		await updateAPI();
 		index();
 	}
 }
