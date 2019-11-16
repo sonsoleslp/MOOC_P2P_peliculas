@@ -10,20 +10,31 @@ body {
 
 * {
   font-family: 'Roboto', sans-serif;
+  box-sizing: border-box;
 }
 
 nav {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
   background-color: #333;
   color: white;
   height: var(--navHeight);
   line-height: var(--navHeight);
   padding-left: 10px;
+}
+nav h1 {
   font-size: 2em;
 }
 
-.contenedor {
+.container {
   display: flex;
   flex-direction: row;
+}
+
+#content {
+  width: 100%;
 }
 
 .menu {
@@ -31,7 +42,7 @@ nav {
   min-height: calc(100vh - var(--navHeight));
 }
 
-#peliculas {
+#movies {
   display: flex;
   flex-direction: row;
   flex: 1;
@@ -43,8 +54,9 @@ nav {
   padding: 5px;
 }
 
-.pelicula {
+.movie {
   display: flex;
+  position: relative;
   flex-direction: column;
   max-width: 200px;
   height: auto;
@@ -56,38 +68,64 @@ nav {
   cursor: pointer;
 }
 
-.pelicula-img {
+.movie-img {
   text-align: center;
   width: 100%;
+  transition: 0.25s all ease-in;
+
 }
 
-.pelicula-img img {
+.movie-img:hover {
+  transform: scale(0.9);
+}
+
+.movie-img img {
   width: 100%;
 }
 
-.pelicula-text {
+.movie-text {
   display: flex;
   flex-direction: column;
   text-align: center;
 }
 
-.pelicula-titulo {
+.movie-titulo {
   font-weight: 800;
   font-size: 18px;
 }
 
-.pelicula-director {
+.movie-director {
   font-size: 12px;
   font-style: italic;
+  margin-bottom: 5px;
 }
 
-.pelicula-genero {
+.movie-genero {
   font-size: 10px;
   color: var(--contrast);
-  text-align: right;
-  margin-bottom: -10px;
-  margin-right: -10px;
+  text-align: left;
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  margin-bottom: 6px;
+  margin-right: 10px;
   text-transform: lowercase;
+}
+
+.movie-actions {
+  font-size: 10px;
+  bottom: 0;
+  margin-bottom: -10px;
+  margin-left: 0px;
+  text-align: left;
+}
+
+.movie-actions button{
+  border: none;
+  outline: none;
+  background: transparent;
+  font-size: 10px;
+  padding 0px;
 }
 
 #generos {
@@ -110,6 +148,11 @@ nav {
   text-decoration: line-through;
   opacity: 0.5;
   text-transform: lowercase;
+  transition: 0.25s all ease-in;
+}
+
+.genero button:hover {
+  transform: scale(0.9);
 }
 
 .genero button.active {
@@ -148,18 +191,72 @@ nav {
   outline: none;
 }
 
+#add-movie {
+  border: 2px solid white;
+  background: transparent;
+  padding: 5px 10px;
+  outline: none;
+  color: white;
+  margin: calc(var(--navHeight) / 2 - 15px);
+  font-size: bolder;
+  cursor: pointer;
+}
+
+.nueva-movie-form {
+  padding: 10px;
+  width: 100%;
+}
+
+.form-campo {
+  margin-bottom: 10px;
+  text-align: left;
+}
+
+.form-campo label {
+  vertical-align: middle;
+  line-height: 30px;
+  margin-right: 10px;
+  text-align: right;
+}
+
+.form-campo input {
+  height: 30px;
+  vertical-align: middle;
+  line-height: 30px;
+  padding: 0px 10px;
+}
+
+input type[text] {
+  width: 40%;
+}
+
+.input-group {
+  padding-left: 10px;
+}
+
+.create-movie {
+  border: 2px solid var(--contrast);
+  background: transparent;
+  padding: 5px 10px;
+  outline: none;
+  color: var(--contrast);
+  font-size: bolder;
+  cursor: pointer;
+  font-size: 16px;
+}
+
 iframe {
   width: 50%;
 }
 
 @media(max-width: 600px) {
-  .contenedor {
+  .container {
     flex-direction: column;
   }
   .menu {
   	min-height: 1px;
   }
-  #peliculas {
+  #content {
   	justify-content: center;
   }
 
