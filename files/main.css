@@ -68,15 +68,17 @@ nav h1 {
   cursor: pointer;
 }
 
+.animated {
+  transition: 0.25s all ease-in;
+}
+
+.animated:hover {
+  transform: scale(0.9);
+}
+
 .movie-img {
   text-align: center;
   width: 100%;
-  transition: 0.25s all ease-in;
-
-}
-
-.movie-img:hover {
-  transform: scale(0.9);
 }
 
 .movie-img img {
@@ -148,12 +150,8 @@ nav h1 {
   text-decoration: line-through;
   opacity: 0.5;
   text-transform: lowercase;
-  transition: 0.25s all ease-in;
 }
 
-.genero button:hover {
-  transform: scale(0.9);
-}
 
 .genero button.active {
   text-decoration: none;
@@ -243,6 +241,47 @@ input type[text] {
   font-size: bolder;
   cursor: pointer;
   font-size: 16px;
+}
+
+#youtube-results {
+  display: flex;
+  flex-direction: row;
+  justify-items: flex-start;
+  flex-wrap: wrap;
+}
+
+.youtube-video-result {
+  display: flex;
+  flex-direction: column;
+  justify-items: flex-start;
+  width: 140px;
+  padding: 10px;
+  font-size: 10px;
+}
+
+.youtube-video-result a {
+  color: var(--contrast);
+  text-decoration: none;
+}
+
+.youtube-video-result p {
+  margin:0;
+}
+
+.youtube-video-result img {
+  cursor: pointer;
+}
+
+#search-youtube {
+  vertical-align: middle;
+  background: none;
+  border: none;
+  outline: none;
+  cursor: pointer;
+}
+
+#search-youtube img{
+  width: 26px;
 }
 
 iframe {

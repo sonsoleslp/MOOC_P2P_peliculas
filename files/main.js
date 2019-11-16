@@ -38,7 +38,7 @@ let index = async () => {
 
 let showGenre = (genero, active) => {
 	return `<li class="genero">
-		<button id="${genero}" class="${active ? "active" : ""}" onclick="filterGenre(this)">${genero}</button>
+		<button id="${genero}" class="animated ${active ? "active" : ""}" onclick="filterGenre(this)">${genero}</button>
 	</li>
 	`;
 };
@@ -62,7 +62,7 @@ let showDetail = (index) => {
 let showThumbnail = (index) => {
 	let movie = my_movies[index];
 	return `<div class="movie">
-		<div class="movie-img" onclick="showDetail(${index})">
+		<div class="animated movie-img" onclick="showDetail(${index})">
 			<img src="${movie.miniatura || 'files/placeholder.png'}"/>
 		</div>
 		<div class="movie-text">
@@ -100,7 +100,7 @@ let newMovie = () => {
 		"director": "", 	
 		"genero": "Comedia", 	
 		"miniatura": "",
-		"trailer": "https://www.youtube.com/embed/..."
+		"trailer": ""
 	};
 	editMovie(movie, true);
 };
@@ -113,7 +113,7 @@ let extractMovieForm = () => {
 	let genero = document.querySelector('input[name="form-genero"]:checked').value;
 	let movie = {titulo, miniatura, director, trailer, genero};
 	return movie;
-}
+};
 
 let updateAPI = async () => {
 	try {
@@ -127,20 +127,22 @@ let updateAPI = async () => {
 		alert("Ha ocurrido un error");
 		return;
 	}
-}
+};
 
 let createmovie = async () => {
 	let movie = extractMovieForm();
 	my_movies.push(movie);
 	await updateAPI();
 	index();
-}
+};
 
 let editMovie = (ind, newMovie) => {
 	let movie = newMovie ? ind : my_movies[ind];
 	let contentDOM = document.getElementById("content");
 	contentDOM.innerHTML = `
+
 		<form class="nueva-movie-form">
+		    <button type="button" class="volver" onclick="index()">Volver</button>
 			<h1>${newMovie ? "Nueva" : "Modificar"} película</h1>
 			<div class="form-campo form-titulo">
 				<label for="form-titulo">Título</label>
@@ -156,7 +158,12 @@ let editMovie = (ind, newMovie) => {
 			</div>
 			<div class="form-campo form-trailer">
 				<label for="form-trailer">Trailer</label>
-				<input type="text" name="form-trailer" id="form-trailer" value="${movie.trailer}"/>
+				<input type="url" name="form-trailer" id="form-trailer" value="${movie.trailer}"/>
+				<button type="button" id="search-youtube" onclick="youtubeSearch()">
+					<img id="search-icon" class="animated" src="files/search.jpg"/>
+				</button>
+			</div>
+			<div id="youtube-results">
 			</div>
 			<div class="form-campo form-genero">
 				<label for="form-genero">Género</label>
@@ -175,14 +182,14 @@ let editMovie = (ind, newMovie) => {
 			</div>
 		</form>
 	`;
-}
+};
 
 let updateMovie = async (ind) => {
 	let movie = extractMovieForm();
 	my_movies[ind] = movie;
 	await updateAPI();
 	index();
-}
+};
 
 let deleteMovie = async (ind) => {
 	if (confirm("¿Seguro que desea borrar esta película?")) {
@@ -190,6 +197,40 @@ let deleteMovie = async (ind) => {
 		await updateAPI();
 		index();
 	}
-}
+};
+
+let setTrailer = (url) => {
+	document.getElementById('form-trailer').value = url;
+	 document.getElementById("youtube-results").innerHTML = ""
+};
+
+let youtubeSearch = async () => {
+	let text = document.getElementById('form-trailer').value;
+	try {
+		let res = await fetch(encodeURI('https://www.googleapis.com/youtube/v3/search?part=id,snippet&maxResults=20&q=' + text + '&key=AIzaSyAMOw9ufNTZAlg5Xvcht9PhnBYjlY0c9z8&videoEmbeddable=true&type=video'))
+		let videosStr = await res.text();
+	    let videos = JSON.parse(videosStr);
+    	if (videos.items) {
+	        let results = videos.items.map(video => {
+	        	let result = {
+	                title: video.snippet.title,
+	                channelTitle: video.snippet.channelTitle,
+	                url: "https://www.youtube.com/embed/" + (video.id ? video.id.videoId : ''),
+	                thumbnail: (video.snippet && video.snippet.thumbnails && video.snippet.thumbnails.default && video.snippet.thumbnails.default.url) ? video.snippet.thumbnails.default.url : "",
+	            };
+	        	return `
+	        	<div class="youtube-video-result">
+	        		<img class="animated youtube-video-thumbnail" src="${result.thumbnail}" onclick="setTrailer('${result.url}')"/>
+	        		<a href="${result.url}">${result.title}</a>
+	        		<p>${result.channelTitle}</p>
+	        	</div>
+	        	`
+	        }).join("");
+	        document.getElementById("youtube-results").innerHTML = results || "No hay resultados";
+	    }
+	} catch(e) {
+		console.error(e);
+	}
+};
 
 document.addEventListener('DOMContentLoaded', index);
