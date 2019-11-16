@@ -23,39 +23,7 @@ var mis_peliculas = [
 ];
 
 var generos = ["Comedia", "Drama", "Fantasía"];
-var mis_peliculas_objects = [];
-var appliedFilters = ["Comedia", "Drama"];
-
-let preparation = () => {
-	for (let p in mis_peliculas) {
-		let {titulo, director, genero, miniatura, trailer} = mis_peliculas[p];
-		mis_peliculas_objects.push(new Pelicula(titulo, director, genero, miniatura, trailer));
-	}
-	index();
-};
-
-let applyFilter = (button) => {
-	let generoSelected = button.id;
-	let pos = appliedFilters.indexOf(generoSelected); 
-	if (pos === -1) {
-		appliedFilters.push(generoSelected);
-	} else {
-		appliedFilters.splice(pos, 1);
-	}
-	index();
-};
-
-let renderGenero = (genero, active) => {
-	return `<li class="genero">
-		<button id="${genero}" class="${active ? "active" : ""}" onclick="applyFilter(this)">${genero}</button>
-	</li>
-	`;
-}
-
-let showDetail = (index) => {
-	let peliculasDOM = document.getElementById("peliculas");
-	peliculasDOM.innerHTML = mis_peliculas_objects[index].renderDetail()
-};
+var generosVisibles = ["Comedia", "Drama"];
 
 let index = () => {
 	/** Render géneros **/
@@ -64,7 +32,7 @@ let index = () => {
 
 	for (let g in generos) {
 		let genero = generos[g];
-		generosHTML += renderGenero(genero, appliedFilters.indexOf(genero) !== -1);
+		generosHTML += showGenero(genero, generosVisibles.indexOf(genero) !== -1);
 	}
 	generosDOM.innerHTML = generosHTML;
 
@@ -73,18 +41,69 @@ let index = () => {
 	let peliculasDOM = document.getElementById("peliculas");
 	let peliculasHTML = "";
 
-	for (let p in mis_peliculas_objects) {
-		let pelicula = mis_peliculas_objects[p];
-		if (appliedFilters.indexOf(pelicula.genero) !== -1) {
-			peliculasHTML += pelicula.renderThumbnail(p);
+	for (let p in mis_peliculas) {
+		let pelicula = mis_peliculas[p];
+		if (generosVisibles.indexOf(pelicula.genero) !== -1) {
+			peliculasHTML += showThumbnail(p);
 		}
 	}
 
 	peliculasHTML = peliculasHTML || "<div class='no-results'> No hay resultados </div>"
 	peliculasDOM.innerHTML = peliculasHTML;
-	
-}
+};
 
-document.addEventListener('DOMContentLoaded', () => {
-	preparation();
-});
+let showGenero = (genero, active) => {
+	return `<li class="genero">
+		<button id="${genero}" class="${active ? "active" : ""}" onclick="aplicarFiltro(this)">${genero}</button>
+	</li>
+	`;
+};
+
+let showDetail = (index) => {
+	let peliculasDOM = document.getElementById("peliculas");
+	let pelicula = mis_peliculas[index]
+	peliculasDOM.innerHTML = `
+	  <div class="detail">
+	    <button class="volver" onclick="index()">Volver</button>
+	    <h1><b>Título</b>: ${pelicula.titulo}</h1>
+	    <h2><b>Director</b>: ${pelicula.director}</h2>
+	    <h3><b>Geńero</b>: ${pelicula.genero}</h3>
+	    <iframe width="100%" height="315" src="${pelicula.trailer}" frameborder="0" 
+	    allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen>
+	    </iframe>
+	  </div>
+	`;
+};
+
+let showThumbnail = (index) => {
+	let pelicula = mis_peliculas[index];
+	return `<div class="pelicula" onclick="showDetail(${index})">
+		<div class="pelicula-img">
+			<img src="${pelicula.miniatura}"/>
+		</div>
+		<div class="pelicula-text">
+			<div class="pelicula-titulo">
+				${pelicula.titulo}
+			</div>
+			<div class="pelicula-director">
+				${pelicula.director}
+			</div>
+		    <div class="pelicula-genero">
+		      ${pelicula.genero}
+		    </div>
+		</div>
+	</div>`;
+};
+
+let aplicarFiltro = (button) => {
+	let generoSelected = button.id;
+	let pos = generosVisibles.indexOf(generoSelected); 
+	if (pos === -1) {
+		generosVisibles.push(generoSelected);
+	} else {
+		generosVisibles.splice(pos, 1);
+	}
+	index();
+};
+
+document.addEventListener('DOMContentLoaded', index);
