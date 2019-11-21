@@ -1,18 +1,14 @@
-html,
-body {
+html,body {
   --navHeight: 90px;
   --contrast: #ff5e00;
-
   padding: 0;
   margin: 0;
   font-family: 'Roboto', sans-serif;
 }
-
 * {
   font-family: 'Roboto', sans-serif;
   box-sizing: border-box;
 }
-
 nav {
   display: flex;
   flex-direction: row;
@@ -27,21 +23,17 @@ nav {
 nav h1 {
   font-size: 2em;
 }
-
 .container {
   display: flex;
   flex-direction: row;
 }
-
 #content {
   width: 100%;
 }
-
 .menu {
   background-color: #ccc;
   min-height: calc(100vh - var(--navHeight));
 }
-
 #movies {
   display: flex;
   flex-direction: row;
@@ -53,7 +45,6 @@ nav h1 {
   background-color: #fff;
   padding: 5px;
 }
-
 .movie {
   display: flex;
   position: relative;
@@ -67,39 +58,31 @@ nav h1 {
   box-shadow: 2px 2px 12px #ddd;
   cursor: pointer;
 }
-
 .movie-img {
   text-align: center;
   width: 100%;
   transition: 0.25s all ease-in;
-
 }
-
 .movie-img:hover {
   transform: scale(0.9);
 }
-
 .movie-img img {
   width: 100%;
 }
-
 .movie-text {
   display: flex;
   flex-direction: column;
   text-align: center;
 }
-
 .movie-titulo {
   font-weight: 800;
   font-size: 18px;
 }
-
 .movie-director {
   font-size: 12px;
   font-style: italic;
   margin-bottom: 5px;
 }
-
 .movie-genero {
   font-size: 10px;
   color: var(--contrast);
@@ -111,7 +94,6 @@ nav h1 {
   margin-right: 10px;
   text-transform: lowercase;
 }
-
 .movie-actions {
   font-size: 10px;
   bottom: 0;
@@ -119,7 +101,6 @@ nav h1 {
   margin-left: 0px;
   text-align: left;
 }
-
 .movie-actions button{
   border: none;
   outline: none;
@@ -127,13 +108,11 @@ nav h1 {
   font-size: 10px;
   padding 0px;
 }
-
 #generos {
   list-style-type: none;
   padding: 15px;
   padding-top: 0;
 }
-
 .genero button {
   width: 100%;
   padding: 5px 35px;
@@ -150,16 +129,13 @@ nav h1 {
   text-transform: lowercase;
   transition: 0.25s all ease-in;
 }
-
 .genero button:hover {
   transform: scale(0.9);
 }
-
 .genero button.active {
   text-decoration: none;
   opacity: 1;
 }
-
 .no-results {
   text-align: center;
   font-size: 1.5em;
@@ -169,13 +145,11 @@ nav h1 {
   line-height: 13em;
   color: var(--contrast);
 }
-
 .detail {
   padding: 10px;
   width: 100%;
   overflow-x: hidden;
 }
-
 .detail h1, .detail h2, .detail h3 {
   font-weight: normal;
   text-overflow: ellipsis;
@@ -190,7 +164,6 @@ nav h1 {
   padding: 5px 0;
   outline: none;
 }
-
 #add-movie {
   border: 2px solid white;
   background: transparent;
@@ -201,39 +174,32 @@ nav h1 {
   font-size: bolder;
   cursor: pointer;
 }
-
 .nueva-movie-form {
   padding: 10px;
   width: 100%;
 }
-
 .form-campo {
   margin-bottom: 10px;
   text-align: left;
 }
-
 .form-campo label {
   vertical-align: middle;
   line-height: 30px;
   margin-right: 10px;
   text-align: right;
 }
-
 .form-campo input {
   height: 30px;
   vertical-align: middle;
   line-height: 30px;
   padding: 0px 10px;
 }
-
 input type[text] {
   width: 40%;
 }
-
 .input-group {
   padding-left: 10px;
 }
-
 .create-movie {
   border: 2px solid var(--contrast);
   background: transparent;
@@ -244,24 +210,20 @@ input type[text] {
   cursor: pointer;
   font-size: 16px;
 }
-
 iframe {
   width: 50%;
 }
-
 @media(max-width: 600px) {
   .container {
     flex-direction: column;
   }
   .menu {
-  	min-height: 1px;
+    min-height: 1px;
   }
   #content {
-  	justify-content: center;
+    justify-content: center;
   }
-
 }
-
 @media(max-width: 800px) {
   iframe {
     width: 100%;

@@ -1,4 +1,5 @@
-var my_movies = [
+// Lista de películas 
+let my_movies = [
 	{
 		"titulo": "Superlópez",   	
 		"director": "Javier Ruiz Caldera", 	
@@ -22,11 +23,15 @@ var my_movies = [
 	}
 ];
 
-var generos = ["Comedia", "Drama", "Fantasía"];
-var visibleGenres = ["Comedia", "Drama"];
+// Lista de géneros
+let generos = ["Comedia", "Drama", "Fantasía"];
 
+// Géneros visibles en el menú izquierdo
+let visibleGenres = ["Comedia", "Drama"];
+
+// Cargar página principal
 let index = () => {
-	/** Render géneros **/
+	// Muestra los géneros a la izquierda
 	let generosHTML = "";
 	let generosDOM = document.getElementById("generos");
 
@@ -37,7 +42,7 @@ let index = () => {
 	generosDOM.innerHTML = generosHTML;
 
 
-	/** Render películas **/
+	// Muestra las miniaturas de las películas 
 	let contentDOM = document.getElementById("content");
 	let moviesHTML = "<div id='movies'>";
 
@@ -52,6 +57,7 @@ let index = () => {
 	contentDOM.innerHTML = moviesHTML + "</div>";
 };
 
+// Muestra el botón de género
 let showGenre = (genero, active) => {
 	return `<li class="genero">
 		<button id="${genero}" class="${active ? "active" : ""}" onclick="filterGenre(this)">${genero}</button>
@@ -59,6 +65,7 @@ let showGenre = (genero, active) => {
 	`;
 };
 
+// Muestra el contenido de la película al hacer click
 let showDetail = (index) => {
 	let contentDOM = document.getElementById("content");
 	let movie = my_movies[index]
@@ -75,11 +82,12 @@ let showDetail = (index) => {
 	`;
 };
 
+// Muestra la miniatura de la película
 let showThumbnail = (index) => {
 	let movie = my_movies[index];
 	return `<div class="movie">
 		<div class="movie-img" onclick="showDetail(${index})">
-			<img src="${movie.miniatura || 'files/placeholder.png'}"/>
+			<img src="${movie.miniatura || 'files/placeholder.png'}" onerror="this.src='files/placeholder.png'"/>
 		</div>
 		<div class="movie-text">
 			<div class="movie-titulo">
@@ -99,6 +107,7 @@ let showThumbnail = (index) => {
 	</div>`;
 };
 
+// Añade o quita un género de la lista de géneros visibles
 let filterGenre = (button) => {
 	let generoSelected = button.id;
 	let pos = visibleGenres.indexOf(generoSelected); 
@@ -110,6 +119,7 @@ let filterGenre = (button) => {
 	index();
 };
 
+// Muestra la pantalla de añadir una nueva película
 let newMovie = () => {
 	let movie = {
 		"titulo": "",   	
@@ -118,9 +128,10 @@ let newMovie = () => {
 		"miniatura": "",
 		"trailer": "https://www.youtube.com/embed/..."
 	};
-	editMovie(movie, true);
+	movieForm(movie, -1);
 };
 
+// Extrae el contenido del formulario de añadir/editar película
 let extractMovieForm = () => {
 	let titulo = document.getElementById('form-titulo').value;
 	let director = document.getElementById('form-director').value;
@@ -129,16 +140,24 @@ let extractMovieForm = () => {
 	let genero = document.querySelector('input[name="form-genero"]:checked').value;
 	let movie = {titulo, miniatura, director, trailer, genero};
 	return movie;
-}
+};
 
+// Crea una nueva película
 let createmovie = () => {
 	let movie = extractMovieForm();
 	my_movies.push(movie);
 	index();
-}
+};
 
+// Muestra la pantalla de editar una película
 let editMovie = (ind, newMovie) => {
-	let movie = newMovie ? ind : my_movies[ind];
+	let movie = my_movies[ind];
+	movieForm(movie, ind);
+};
+
+// Muestra el formulario de añadir/editar una película
+let movieForm = (movie, index) => {
+	const newMovie = index === -1;
 	let contentDOM = document.getElementById("content");
 	contentDOM.innerHTML = `
 		<form class="nueva-movie-form">
@@ -164,7 +183,7 @@ let editMovie = (ind, newMovie) => {
 				<div class="input-group">
 					${generos.map((genre,i)=>{
 						return `<input type="radio" name="form-genero" id="form-genero${i}" ${i===0 ? "checked":""} value="${genre}"/>
-					<label for="genero${i}">${genre}</label>`
+						<label for="genero${i}">${genre}</label>`
 					}).join('<br/>')}
 				</div>
 			</div>
@@ -176,19 +195,21 @@ let editMovie = (ind, newMovie) => {
 			</div>
 		</form>
 	`;
-}
+};
 
+// Actualizar película
 let updateMovie = (ind) => {
 	let movie = extractMovieForm();
 	my_movies[ind] = movie;
 	index();
-}
+};
 
+// Borrar película
 let deleteMovie = (ind) => {
 	if (confirm("¿Seguro que desea borrar esta película?")) {
 		my_movies.splice(ind, 1);
 		index();
 	}
-}
+};
 
 document.addEventListener('DOMContentLoaded', index);
