@@ -144,7 +144,7 @@ let updateAPI = async () => {
 };
 
 // Crea una nueva película
-let createmovie = async () => {
+let createMovie = async () => {
 	let movie = extractMovieForm();
 	my_movies.push(movie);
 	await updateAPI();
