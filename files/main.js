@@ -1,11 +1,18 @@
+// URL de la API 
 const URL = "https://api.myjson.com/bins/lsigq";
-var my_movies = [];
 
-var generos = ["Comedia", "Drama", "Fantasía"];
-var visibleGenres = ["Comedia", "Drama"];
+// Lista de películas 
+let my_movies = [];
 
+// Lista de géneros
+let generos = ["Comedia", "Drama", "Fantasía"];
+
+// Géneros visibles en el menú izquierdo
+let visibleGenres = ["Comedia", "Drama"];
+
+// Cargar página principal
 let index = async () => {
-	/** Render géneros **/
+	// Muestra los géneros a la izquierda
 	let generosHTML = "";
 	let generosDOM = document.getElementById("generos");
 
@@ -16,7 +23,7 @@ let index = async () => {
 	generosDOM.innerHTML = generosHTML;
 
 
-	/** Render películas **/
+	// Muestra las miniaturas de las películas 
 	let contentDOM = document.getElementById("content");
 	let moviesHTML = "<div id='movies'>";
 	try {
@@ -36,6 +43,7 @@ let index = async () => {
 	contentDOM.innerHTML = moviesHTML + "</div>";
 };
 
+// Muestra el botón de género
 let showGenre = (genero, active) => {
 	return `<li class="genero">
 		<button id="${genero}" class="animated ${active ? "active" : ""}" onclick="filterGenre(this)">${genero}</button>
@@ -43,6 +51,7 @@ let showGenre = (genero, active) => {
 	`;
 };
 
+// Muestra el contenido de la película al hacer click
 let showDetail = (index) => {
 	let contentDOM = document.getElementById("content");
 	let movie = my_movies[index]
@@ -59,11 +68,12 @@ let showDetail = (index) => {
 	`;
 };
 
+// Muestra la miniatura de la película
 let showThumbnail = (index) => {
 	let movie = my_movies[index];
 	return `<div class="movie">
 		<div class="animated movie-img" onclick="showDetail(${index})">
-			<img src="${movie.miniatura || 'files/placeholder.png'}"/>
+			<img src="${movie.miniatura || 'files/placeholder.png'}" onerror="this.src='files/placeholder.png'"/>
 		</div>
 		<div class="movie-text">
 			<div class="movie-titulo">
@@ -83,6 +93,7 @@ let showThumbnail = (index) => {
 	</div>`;
 };
 
+// Añade o quita un género de la lista de géneros visibles
 let filterGenre = (button) => {
 	let generoSelected = button.id;
 	let pos = visibleGenres.indexOf(generoSelected); 
@@ -94,6 +105,7 @@ let filterGenre = (button) => {
 	index();
 };
 
+// Muestra la pantalla de añadir una nueva película
 let newMovie = () => {
 	let movie = {
 		"titulo": "",   	
@@ -102,9 +114,10 @@ let newMovie = () => {
 		"miniatura": "",
 		"trailer": ""
 	};
-	editMovie(movie, true);
+	movieForm(movie, -1);
 };
 
+// Extrae el contenido del formulario de añadir/editar película
 let extractMovieForm = () => {
 	let titulo = document.getElementById('form-titulo').value;
 	let director = document.getElementById('form-director').value;
@@ -115,6 +128,7 @@ let extractMovieForm = () => {
 	return movie;
 };
 
+// Actualiza la información a través de la API
 let updateAPI = async () => {
 	try {
 		await fetch(URL, {
@@ -129,6 +143,7 @@ let updateAPI = async () => {
 	}
 };
 
+// Crea una nueva película
 let createmovie = async () => {
 	let movie = extractMovieForm();
 	my_movies.push(movie);
@@ -136,8 +151,15 @@ let createmovie = async () => {
 	index();
 };
 
+// Muestra la pantalla de editar una película
 let editMovie = (ind, newMovie) => {
-	let movie = newMovie ? ind : my_movies[ind];
+	let movie = my_movies[ind];
+	movieForm(movie, ind);
+};
+
+// Muestra el formulario de añadir/editar una película
+let movieForm = (movie, index) => {
+	const newMovie = index === -1;
 	let contentDOM = document.getElementById("content");
 	contentDOM.innerHTML = `
 
@@ -170,7 +192,7 @@ let editMovie = (ind, newMovie) => {
 				<div class="input-group">
 					${generos.map((genre,i)=>{
 						return `<input type="radio" name="form-genero" id="form-genero${i}" ${i===0 ? "checked":""} value="${genre}"/>
-					<label for="genero${i}">${genre}</label>`
+						<label for="genero${i}">${genre}</label>`
 					}).join('<br/>')}
 				</div>
 			</div>
@@ -184,6 +206,7 @@ let editMovie = (ind, newMovie) => {
 	`;
 };
 
+// Actualizar película
 let updateMovie = async (ind) => {
 	let movie = extractMovieForm();
 	my_movies[ind] = movie;
@@ -191,6 +214,7 @@ let updateMovie = async (ind) => {
 	index();
 };
 
+// Borrar película
 let deleteMovie = async (ind) => {
 	if (confirm("¿Seguro que desea borrar esta película?")) {
 		my_movies.splice(ind, 1);
@@ -199,11 +223,7 @@ let deleteMovie = async (ind) => {
 	}
 };
 
-let setTrailer = (url) => {
-	document.getElementById('form-trailer').value = url;
-	 document.getElementById("youtube-results").innerHTML = ""
-};
-
+// Búsqueda en Youtube
 let youtubeSearch = async () => {
 	let text = document.getElementById('form-trailer').value;
 	try {
@@ -231,6 +251,12 @@ let youtubeSearch = async () => {
 	} catch(e) {
 		console.error(e);
 	}
+};
+
+// Seleccionar trailer de los resultados de búsqueda
+let setTrailer = (url) => {
+	document.getElementById('form-trailer').value = url;
+	document.getElementById("youtube-results").innerHTML = "";
 };
 
 document.addEventListener('DOMContentLoaded', index);
