@@ -146,6 +146,7 @@ let extractMovieForm = () => {
 let createmovie = () => {
 	let movie = extractMovieForm();
 	my_movies.push(movie);
+	// Aquí actualizar endpoint
 	index();
 };
 
@@ -201,6 +202,7 @@ let movieForm = (movie, index) => {
 let updateMovie = (ind) => {
 	let movie = extractMovieForm();
 	my_movies[ind] = movie;
+	// Aquí actualizar endpoint
 	index();
 };
 
@@ -208,6 +210,7 @@ let updateMovie = (ind) => {
 let deleteMovie = (ind) => {
 	if (confirm("¿Seguro que desea borrar esta película?")) {
 		my_movies.splice(ind, 1);
+		// Aquí actualizar endpoint
 		index();
 	}
 };
