@@ -191,7 +191,7 @@ let movieForm = (movie, index) => {
 			</div>
 			<div class="form-campo">
 				<button class="create-movie" type="button" 
-					onclick="${newMovie ? 'createmovie()':'updateMovie('+ind+')'}">
+					onclick="${newMovie ? 'createmovie()' : 'updateMovie(' + index + ')'}">
 					${newMovie ? "Añadir":"Actualizar"}
 				</button>
 			</div>
