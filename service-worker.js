@@ -1,11 +1,20 @@
 'use strict';
 
 // CODELAB: Update cache names any time any of the cached files change.
-const CACHE_NAME = 'static-cache-v3';
+const CACHE_NAME = 'static-cache-v8';
 
 // CODELAB: Add list of files to cache here.
 const FILES_TO_CACHE = [
   '/offline.html',
+  '/index.html',
+  '/files/interstellar.png',
+  '/files/jurassicpark.png',
+  '/files/placeholder.png',
+  '/files/superlopez.png',
+  '/files/search.jpg',
+  '/files/main.js',
+  '/files/install.js',
+  '/files/main.css'
 ];
 
 self.addEventListener('install', (evt) => {
@@ -37,19 +46,20 @@ self.addEventListener('activate', (evt) => {
 });
 
 self.addEventListener('fetch', (evt) => {
-  console.log('[ServiceWorker] Fetch', evt.request.url);
   // CODELAB: Add fetch event handler here.
-  if (evt.request.mode !== 'navigate') {
-    // Not a page navigation, bail.
-    return;
-  }
+  // if (evt.request.mode !== 'navigate') {
+  //   // Not a page navigation, bail.
+  //   console.log("Fetch no navigate");
+  //   return;
+  // }
+  console.log('[ServiceWorker] Fetch', evt.request.url);
   evt.respondWith(
-      fetch(evt.request)
-          .catch(() => {
-            return caches.open(CACHE_NAME)
-                .then((cache) => {
-                  return cache.match('offline.html');
-                });
-          })
+      caches.open(CACHE_NAME).then((cache) => {
+        return cache.match(evt.request)
+            .then((response) => {
+              console.log("RESP", response);
+              return response || fetch(evt.request);
+            });
+      })
   );
 });

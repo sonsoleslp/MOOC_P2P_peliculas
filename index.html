@@ -17,6 +17,8 @@
   <body>
   <nav>
     <h1>Mis películas</h1>
+    <button id="butInstall" aria-label="Install" hidden></button>
+
     <button id="add-movie" onclick="newMovie()">Add movie</button>
   </nav>
   <div class="container">
@@ -29,12 +31,13 @@
   <script>
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {
-        navigator.serviceWorker.register('files/service-worker.js')
+        navigator.serviceWorker.register('service-worker.js')
             .then((reg) => {
               console.log('Service worker registered.', reg);
             });
       });
     }
   </script>
+  <script src="files/install.js"></script>
   </body>
 </html>
