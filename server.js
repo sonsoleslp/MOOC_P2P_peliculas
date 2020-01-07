@@ -3,10 +3,6 @@
 const express = require('express');
 const redirectToHTTPS = require('express-http-to-https').redirectToHTTPS;
 
-
-
-
-
 /**
  * Starts the Express server.
  *
